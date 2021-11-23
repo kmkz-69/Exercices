@@ -16,7 +16,7 @@ router.get("/api", (req, res) => {
   });
 });
 
-router.get("/", (req, res) => {
+router.get("/",  (req, res) => {
   schema.find((err, subscriptions) => {
     if (err) {
       res.json({
@@ -28,14 +28,15 @@ router.get("/", (req, res) => {
         .filter((e, i) => {
           return (
             e.current_status === "processing" &&
-            new Date(2018, 12, 30).toISOString() > e.started_on 
+           new Date(2018, 12, 30).toISOString() > e.started_on 
           );
         })
         .sort((a, b) => {
           return a.contract_reference - b.contract_reference;
         })
         .map((e, i) => {
-          res.render("index", {
+          res.render('index', {
+            Date: new Date(),
             started_on: e.current_status,
             current_status: e.started_on,
             contract_references: e.contract_reference,
