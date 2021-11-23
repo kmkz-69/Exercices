@@ -6,8 +6,9 @@ const router = express.Router();
  *App Routes
  */
 
+ //Get all Subscribers
 router.get("/api", (req, res) => {
-  schema.find({}, (err, data) => {
+  schema.find({}, (err, data) => {  //find all data
     if (err) {
       res.send(err);
     } else {
@@ -16,7 +17,17 @@ router.get("/api", (req, res) => {
   });
 });
 
-router.get("/",  (req, res) => {
+//find one subscriber by id mongoose query
+router.get("/api/:id", (req, res) => {
+  schema.find({}).then((subscriptions) => {
+    res.json(subscriptions);
+  }).catch((err) => {
+    res.send(err);
+  });
+
+});
+/***********/
+router.get("/", async (req, res) => {
   schema.find((err, subscriptions) => {
     if (err) {
       res.json({
@@ -28,7 +39,7 @@ router.get("/",  (req, res) => {
         .filter((e, i) => {
           return (
             e.current_status === "processing" &&
-           new Date(2018, 12, 30).toISOString() > e.started_on 
+           new Date(2018, 12, 30).toLocaleDateString() > e.started_on 
           );
         })
         .sort((a, b) => {
@@ -37,6 +48,7 @@ router.get("/",  (req, res) => {
         .map((e, i) => {
           res.render('index', {
             Date: new Date(),
+            Subscriptions: subscriptions,
             started_on: e.current_status,
             current_status: e.started_on,
             contract_references: e.contract_reference,
