@@ -39,7 +39,7 @@ router.get("/", async (req, res) => {
         .filter((e, i) => {
           return (
             e.current_status === "processing" &&
-           new Date(2018, 12, 30).toLocaleDateString() > e.started_on 
+           new Date(2018, 12, 30).toUTCString() > e.started_on 
           );
         })
         .sort((a, b) => {
