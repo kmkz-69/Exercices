@@ -6,28 +6,25 @@ const router = express.Router();
  *App Routes
  */
 
- //Get all Subscribers
-router.get("/api", (req, res) => {
-  schema.find({}, (err, data) => {  //find all data
-    if (err) {
-      res.send(err);
-    } else {
-      res.json(data);
-    }
-  });
+//Get all Subscribers
+router.get("/api", async (req, res) => {
+  try {
+    const subs = await schema.find({});
+    res.json(subs);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 });
 
 //find one subscriber by id mongoose query
-router.get("/api/:id", (req, res) => {
-  schema.find({}).then((subscriptions) => {
-    res.json(subscriptions);
-  }).catch((err) => {
-    res.send(err);
-  });
+router.get("/api/:id", getSubs, (req, res) => {
+  res.json(res.subs);
 
+  console.log(typeof schema);
 });
 /***********/
-router.get("/", async (req, res) => {
+
+router.get("/", async (_req, res) => {
   schema.find((err, subscriptions) => {
     if (err) {
       res.json({
@@ -39,15 +36,15 @@ router.get("/", async (req, res) => {
         .filter((e, i) => {
           return (
             e.current_status === "processing" &&
-           new Date(2018, 12, 30).toUTCString() > e.started_on 
+            new Date(2018, 12, 30).toLocaleDateString() > e.started_on
           );
         })
         .sort((a, b) => {
           return a.contract_reference - b.contract_reference;
         })
         .map((e, i) => {
-          res.render('index', {
-            Date: new Date(),
+          res.render("index", {
+            Date: new Date().toUTCString(),
             Subscriptions: subscriptions,
             started_on: e.current_status,
             current_status: e.started_on,
@@ -59,12 +56,27 @@ router.get("/", async (req, res) => {
   });
 });
 
+//middleware to use for all requests
+async function getSubs(req, res, next) {
+  let subs;
+  try {
+    subs = await schema.findById(req.params.id);
+    if (!subs) {
+      return res.status(404).json({
+        message: "Subscription not found",
+      });
+    }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+  res.subs = subs;
+  next();
+}
 export default router;
 
 /************************** */
 // Schema for Subscriptions
 const subschema = new mongoose.Schema({
-  id: { type: String, required: true },
   Company: { type: String, required: true },
   contract_reference: { type: String, required: true },
   current_status: { type: String, required: true },
@@ -79,4 +91,4 @@ const subschema = new mongoose.Schema({
   ToolModel: { type: String, required: true },
 });
 
-const schema = mongoose.model("subscriptions", subschema);
+const schema = mongoose.model("Subscriptions", subschema);

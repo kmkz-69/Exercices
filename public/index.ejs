@@ -24,24 +24,25 @@
               Paris <%=Date%>
             </caption>
             <tr class="table-dark">
-              <th id="">current_status</th>
-              <th id="">started_on</th>
-              <th id="">contract_references   </th>
-              <th id="">  </th>
+              <th id="">Current_status</th>
+              <th id="">Started_on</th>
+              <th id="">Contract_references</th>
+              <th id=""></th>
             </tr>
             <% Subscriptions.forEach(subscriptions => { %>
             <tr>
               <td><%= subscriptions.current_status %></td>
               <td><%= subscriptions.started_on%></td>
-              
               <td><%=subscriptions.current_status %></td>
               <td><%= subscriptions.contract_references%></td>
-      
             </tr>
             <% }) %>
           </table>
         </div>
       </div>
     </div>
+    <footer class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="navbar-brand"><%= %> </div>
+    </footer>
   </body>
 </html>
