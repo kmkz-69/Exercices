@@ -2,9 +2,6 @@ import express from "express";
 import mongoose from "mongoose";
 
 const router = express.Router();
-/*
- *App Routes
- */
 
 //Get all Subscribers
 router.get("/api", async (req, res) => {
@@ -16,13 +13,73 @@ router.get("/api", async (req, res) => {
   }
 });
 
-//find one subscriber by id mongoose query
-router.get("/api/:id", getSubs, (req, res) => {
-  res.json(res.subs);
 
-  console.log(typeof schema);
+//Get a single Subscriber
+router.get("/api/:id", async (req, res) => {
+  const post = await schema.findOne({ _id: req.params.id })
+  res.json(post);
+})
+
+//find one subscriber by id mongoose query
+// router.get("/api/:id", getSubs,  (req, res) => {
+//   res.json(res.subs.Company);
+// });
+
+//Post a new subscriber
+router.post("/api/post", async (req, res) => {
+  const {
+    Company,
+    contract_reference,
+    current_status,
+    duration,
+    ended_on,
+    active,
+    payment_method,
+    started_on,
+    SubscriptionModel,
+    SubscriptionType,
+    Tool,
+    ToolCategory,
+    ToolModel,
+    renewable,
+    cancelled,
+    denounced,
+  } = req.body;
+  const newSubs = new schema({
+    Company,
+    contract_reference,
+    current_status,
+    duration,
+    ended_on,
+    active,
+    payment_method,
+    started_on,
+    SubscriptionModel,
+    SubscriptionType,
+    Tool,
+    ToolCategory,
+    ToolModel,
+    renewable,
+    cancelled,
+    denounced,
+  });
+  try {
+    const result = await newSubs.save();
+    res.status(201).json(result);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 });
-/***********/
+
+//Delete a Subscriber
+router.delete("/api/:id", getSubs, async (req, res) => {
+  try {
+    await res.subs.deleteOne({ _id: req.params.id });
+    res.json({ message: "Deleted Subscription" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
 router.get("/", async (_req, res) => {
   schema.find((err, subscriptions) => {
@@ -60,7 +117,7 @@ router.get("/", async (_req, res) => {
 async function getSubs(req, res, next) {
   let subs;
   try {
-    subs = await schema.findById(req.params.id);
+     subs = await schema.findById(req.params.id);
     if (!subs) {
       return res.status(404).json({
         message: "Subscription not found",
@@ -80,8 +137,12 @@ const subschema = new mongoose.Schema({
   Company: { type: String, required: true },
   contract_reference: { type: String, required: true },
   current_status: { type: String, required: true },
-  duration: { type: String, required: true },
+  duration: { type: Number, required: true },
   ended_on: { type: String, required: true },
+  renewable: { type: Boolean, required: true },
+  active: { type: Boolean, required: true },
+  cancelled: { type: Boolean, required: true },
+  denounced: { type: Boolean, required: true },
   payment_method: { type: String, required: true },
   started_on: { type: String, required: true },
   SubscriptionModel: { type: String, required: true },
