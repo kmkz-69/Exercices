@@ -87,18 +87,17 @@ router.get("/", async (_req, res) => {
       subscriptions
       .filter((e) => {
         return (
-          e.current_status === "processing" 
-          &&
-          new Date(2018, 12, 30).toLocaleDateString() > e.started_on 
+          e.started_on = new Date(e.started_on).toLocaleDateString()
+
+          // e.current_status === "processing" 
+          // &&
+          // new Date(2018, 12, 30).toLocaleDateString()> e.started_on 
           );
         })
         .sort((a, b) => {
           return a.contract_reference - b.contract_reference;
         })
         .map((e) => {
-          
-          e.started_on = new Date(e.started_on).toLocaleDateString();
-
           res.render("index", {
             Date: new Date().toUTCString(),
             Subscriptions: subscriptions,
