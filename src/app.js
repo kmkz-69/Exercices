@@ -5,6 +5,8 @@ import monRouter from "./routes/Router.js";
 import "./database.js";
 
 const app = express();
+
+//create server
 const server = http.createServer(app);
 
 //Statics files
