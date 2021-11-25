@@ -181,6 +181,15 @@ router.delete("/api/:id", getSubs, async (req, res) => {
   }
 });
 
+//OPTION for Subscriber
+router.options("/api/:id", (req, res) => {
+  res.sendStatus(200);
+});
+
+//HEAD for Subscriber
+router.head("/api/:id", getSubs, (req, res) => {
+  res.sendStatus(200);
+});
 
 //Optimistic Locking
 async function getSubs(req, res, next) {
@@ -204,12 +213,15 @@ router.get("/", async (req, res) => {
       res.json({
         success: false,
         References: null,
-      });
+      })  ;
+
     } else {
       subscriptions
       .filter((e) => {
         return (
-          e.started_on = new Date(e.started_on).toLocaleDateString()
+          e.started_on = new Date(e.started_on).toLocaleDateString() 
+    
+        
           
           // e.current_status === "processing" 
           // &&
