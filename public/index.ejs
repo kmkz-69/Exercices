@@ -28,8 +28,6 @@
               <th id="">Started_on</th>
               <th id="">Contract_references</th>
               <th id=""></th>
-            
-
             </tr>
             <% Subscriptions.forEach(subscriptions => { %>
             <tr>
@@ -37,15 +35,31 @@
               <td><%= subscriptions.started_on%></td>
               <td><%=subscriptions.current_status %></td>
               <td><%= subscriptions.contract_references%></td>
-           
             </tr>
             <% }) %>
           </table>
         </div>
       </div>
-    </div>
+      </div>
+      </div>
+      <section class="container">
+        <div class="row">
+          <div class="col-12">
+      
+              <button type="button" class="btn btn-primary lg">PUT</button>
+              <button type="button" class="btn btn-secondary">GET</button>
+              <button type="button" class="btn btn-success">POST</button>
+              <button type="button" class="btn btn-danger">DELETE</button>
+              <button type="button" class="btn btn-warning">PATCH</button>
+              <button type="button" class="btn btn-info">OPTION</button>
+              <button type="button" class="btn btn-light">HEAD</button>
+   
+      
+            </div>
+          </div>
+          </section>
     <footer class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div class="navbar-brand"><%= %> </div>
+      <div class="navbar-brand"><%= %></div>
     </footer>
   </body>
 </html>
